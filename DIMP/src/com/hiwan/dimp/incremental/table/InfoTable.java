@@ -5,11 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
+import org.apache.hadoop.hive.metastore.api.ThriftHiveMetastore.Processor.update_partition_column_statistics;
+
+import com.google.common.util.concurrent.ExecutionError;
 import com.hiwan.dimp.db.StreamGobbler;
 import com.hiwan.dimp.incremental.bean.AugmentInfo;
 import com.hiwan.dimp.incremental.bean.SourceFileBean;
+import com.hiwan.dimp.incremental.dao.FileLoadingProgress;
 import com.hiwan.dimp.incremental.util.HdfsFileSystem;
 import com.hiwan.dimp.incremental.util.HiveConnection2;
 
@@ -188,7 +193,14 @@ public class InfoTable {
 		String old_date = "";
 		String file_date = null;
 		String[] f_arr = null;
+		String fileName = null;
+		HashSet<String> sucessfulFiles = new HashSet<String>();
+
 		for (SourceFileBean source_bean : source_bean_list) {
+
+			fileName = source_bean.getSource_path();
+			FileLoadingProgress.updateProgress(fileName, 25);
+
 			f_arr = source_bean.getSource_path().split("_");
 			file_date = f_arr[f_arr.length - 3];
 			if (file_date.compareTo(old_date) > 0) {
@@ -199,19 +211,35 @@ public class InfoTable {
 			String hdfs_path = hive_conn.table_hdfs_path(aug_info.getTemp_table_name());
 			// hfs.put_file_to_hdfs(file_code_change_path, load_shell,aug_info)
 			// ;
+
 			try {
 				hfs.put_file_to_hdfs2(file_code_change_path, hdfs_path);
+				FileLoadingProgress.updateProgress(fileName, 55);
+				sucessfulFiles.add(fileName);
 			} catch (Exception e) {
-
+				String exceptionMessage = FileLoadingProgress.formatMessage(fileName, "异常", e, "U", "本地文件 >> 临时表");
+				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4, exceptionMessage);
+				System.out.println(exceptionMessage);
 			}
-
 		}
+
 		file_date = old_date;
 		/**
 		 * 对数据进行去重 根据主键进行判断,主键重复的情况下只取第一条数据 创建temp表和mid表的结构相一致
 		 * 增量导入表添加一列：有temp到mid的sql语句 去重的sql语句 sql语句的编写：
 		 */
-		hive_conn.execute3(aug_info.getTemp_to_mid());
+		try {
+			hive_conn.execute3(aug_info.getTemp_to_mid());
+			for (String file : sucessfulFiles) {
+				FileLoadingProgress.updateProgress(file, 65);
+			}
+		} catch (Exception e) {
+			for (String file : sucessfulFiles) {
+				String message = FileLoadingProgress.formatMessage(file, "异常", e, "U", "临时表 >> 中间表 （数据去重）");
+				FileLoadingProgress.updateFinalStatus(file, new Date().toString(), 4, message);
+			}
+		}
+
 
 		String import_script = aug_info.getImport_script().replace("1 = 1  and", "");
 		String import_sql = "";

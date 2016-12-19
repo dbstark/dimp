@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashSet;
+
+import org.iq80.snappy.HadoopSnappyCodec;
 
 import com.hiwan.dimp.db.DBAccess;
 
@@ -163,21 +166,43 @@ public class FileLoadingProgress {
 			e.printStackTrace();
 		}
 	}
+	
+	public static String formatMessage(String fileName, String messageType, Exception e, String tableType, String stage) {
+		String exceptionMessage = "【文  件  名】：" + fileName + "\n" +
+								  "【消        息】：" + messageType + "\n\t" + e.getMessage() + "\n" + 
+				  				  "【表  类  型】：" + tableType + "\n" + 
+				  				  "【错误阶段】：" + stage;
+		return exceptionMessage;		
+	}
 	/**
 	 * 测试【插入、更新】功能
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ProgressRecord pr = new ProgressRecord("b", "b3.dat", "A", 1, 1, "PROCESSING...", new Date().toString(), null);
+		//ProgressRecord pr = new ProgressRecord("b", "b3.dat", "A", 1, 1, "PROCESSING...", new Date().toString(), null);
 		//insertTableFileLoadingProgressValues(pr);
 
-		FileLoadingProgress.connect2Mysql();
+		//FileLoadingProgress.connect2Mysql();
 		String fileName = "b3.dat";
-		updateProgress(fileName, 50);
+		//updateProgress(fileName, 50);
 		//updateEndTime(fileName, new Date().toString());
 		//updateLoadInfo(fileName, "[STATUS] SUCESSFUL");
 		//updateFinalStatus(fileName, 3);
-		updateFinalStatus(fileName, new Date().toString(), 4, "Exception");
+		//updateFinalStatus(fileName, new Date().toString(), 4, "Exception");
+		try { 
+			System.out.println(1/0);
+		} catch (Exception e) {
+			System.out.println(formatMessage("b3.dat", "异常", e, "U", "本地文件  >> 临时表"));
+		}
+		
+		HashSet<String> successfile = new HashSet<String>();
+		successfile.add("a");
+		successfile.add("b");
+		successfile.add("c");
+		
+		for (String file : successfile) {
+			System.out.println(file);
+		}
 	}
 }
