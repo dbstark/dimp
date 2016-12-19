@@ -197,7 +197,16 @@ public class DetailSummaryTable {
 		 */
 		if ("1".equals(is_partition)) {
 			System.out.println("清空表：" + "truncate table " + aug_info.getMid_table_name());
-			hive_conn.execute3("truncate table " + aug_info.getMid_table_name());
+			try {
+				hive_conn.execute3("truncate table " + aug_info.getMid_table_name());
+				//处理正常，未结束
+				FileLoadingProgress.updateJobProgress(source_bean_list, 25);
+			} catch (Exception e) {
+				//处理异常
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "", e, "A", "清空中间表：" +
+							aug_info.getMid_table_name() + "\n\t" + e.getMessage(), 4);
+				throw e;
+			}
 		}
 
 		String file_date = null;
@@ -211,8 +220,6 @@ public class DetailSummaryTable {
 			 * 
 			 */
 			String fileName = source_bean.getSource_path();
-			FileLoadingProgress.updateProgress(fileName, 25);
-
 			/******************** new add [END] *********************/
 
 			f_arr = source_bean.getSource_path().split("_");
@@ -231,7 +238,6 @@ public class DetailSummaryTable {
 			// // ;
 			try {
 				hfs.put_file_to_hdfs2(file_code_change_path, hdfs_path);
-
 				/**********************
 				 * new add [BEGIN]********************
 				 * 
@@ -240,20 +246,15 @@ public class DetailSummaryTable {
 				 * 
 				 */
 				if ("1".equals(is_partition)) {
-					FileLoadingProgress.updateProgress(fileName, 45);
+					//加载正常，未结束
+					FileLoadingProgress.updateFileProgress(fileName, 45);
 				} else {
-					FileLoadingProgress.updateProgress(fileName, 100);
-					FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 2,
-							"[Message]: file load SUCESSFUL!");
+					//加载正常，结束
+					FileLoadingProgress.updateFileProgress(fileName, 90);
 				}
 			} catch (Exception e) {
-				if ("1".equals(is_partition)) {
-					FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4,
-							"[Message]: ERROR\n\t" + e.getMessage() + "\n[Stage]: putting LOCAL FILE to MIDDLE TABLE!");
-				} else {
-					FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4, "[Message]: ERROR\n\t"
-							+ e.getMessage() + "\n[Stage]: putting LOCAL FILE to TARGET TABLE (HDFS)!");
-				}
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "A", "本地文件  >>  中间表\n\t" +
+											e.getMessage(), 4);
 				throw e;
 			}
 			/******************** new add [END] *********************/
@@ -306,27 +307,19 @@ public class DetailSummaryTable {
 					 * @since 2016-12-16
 					 * 
 					 */
-					for (SourceFileBean source_bean : source_bean_list) {
-						String fileName = source_bean.getSource_path();
-						FileLoadingProgress.updateProgress(fileName, 100);
-						FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 2,
-								"[Message]: ERROR\n\t" + e.getMessage() + 
-								"\n[Stage]: " + insert_sql);
-					}
-
-					break;
+					FileLoadingProgress.updateJobFinalStatus(source_bean_list, "", e, "A", "中间表  >>  目标表\n\t" +
+								insert_sql + "\n\t" + e.getMessage(), 4);
+					throw e;
 					//hive_conn.execute3(insert_sql);
 				}
 			}
-
-			for (SourceFileBean source_bean : source_bean_list) {
-				String fileName = source_bean.getSource_path();
-				FileLoadingProgress.updateProgress(fileName, 100);
-				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 2,
-						"[Message]: file load SUCESSFUL");
-			}
-
-			/********************** new add [END] **********************/
+			
+			FileLoadingProgress.updateJobProgress(source_bean_list, 100);
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "A", "加载结束", 2);
+		}
+		else {
+			FileLoadingProgress.updateJobProgress(source_bean_list, 100);
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "A", "加载结束", 2);
 		}
 		return file_date;
 	}
