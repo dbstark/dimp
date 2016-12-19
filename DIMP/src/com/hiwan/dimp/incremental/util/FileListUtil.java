@@ -207,7 +207,7 @@ public class FileListUtil {
 							 * @author CHEGNKAI.SHENG
 							 * @since 2016-12-16
 							 */
-							FileLoadingProgress.updateErrorStatus(fileName, 
+							FileLoadingProgress.updateFinalStatus(fileName, 
 									new Date().toString(), 4, error_message);
 
 							/*******************new add [END]******************/

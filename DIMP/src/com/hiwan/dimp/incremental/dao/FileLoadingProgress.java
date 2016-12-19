@@ -178,6 +178,6 @@ public class FileLoadingProgress {
 		//updateEndTime(fileName, new Date().toString());
 		//updateLoadInfo(fileName, "[STATUS] SUCESSFUL");
 		//updateFinalStatus(fileName, 3);
-		updateTranscodingErrorStatus(fileName, new Date().toString(), 4, "Exception");
+		updateFinalStatus(fileName, new Date().toString(), 4, "Exception");
 	}
 }
