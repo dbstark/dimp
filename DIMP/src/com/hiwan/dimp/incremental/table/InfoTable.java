@@ -187,8 +187,15 @@ public class InfoTable {
 		 * 1.清空中间表 2.load文件进入中间表 3.判断信息表是否是分区表 是:创建分区,merge数据到分区(orc表是否需要先创建分区)
 		 * 否:直接进行merge
 		 */
-		hive_conn.execute3(" truncate table " + aug_info.getMid_table_name());
-		hive_conn.execute3(" truncate table " + aug_info.getTemp_table_name());
+		try {
+			hive_conn.execute3(" truncate table " + aug_info.getMid_table_name());
+			hive_conn.execute3(" truncate table " + aug_info.getTemp_table_name());
+			FileLoadingProgress.updateJobProgress(source_bean_list, 25);
+		} catch (Exception e) {
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "清空中间表、临时表\n\t" + 
+									e.getMessage(), 4);
+			throw e;
+		}
 
 		String old_date = "";
 		String file_date = null;
@@ -197,8 +204,6 @@ public class InfoTable {
 
 		for (SourceFileBean source_bean : source_bean_list) {
 			fileName = source_bean.getSource_path();
-
-			FileLoadingProgress.updateProgress(fileName, 25);
 
 			f_arr = source_bean.getSource_path().split("_");
 			file_date = f_arr[f_arr.length - 3];
@@ -212,10 +217,12 @@ public class InfoTable {
 			// ;
 			try {
 				hfs.put_file_to_hdfs2(file_code_change_path, hdfs_path);
-				FileLoadingProgress.updateProgress(fileName, 55);
-				sucessfulFiles.add(fileName);
+				//加载正常，未结束
+				FileLoadingProgress.updateFileProgress(fileName, 55);
 			} catch (Exception e) {
-				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "本地文件  >> 临时表", 4);
+				//加载异常
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "本地文件  >> 临时表\n\t" + 
+									e.getMessage(), 4);
 				throw e;
 			}
 		}
@@ -227,9 +234,12 @@ public class InfoTable {
 		 */
 		try {
 			hive_conn.execute3(aug_info.getTemp_to_mid());
+			//加载正常, 未结束
 			FileLoadingProgress.updateJobProgress(source_bean_list, 65);
 		} catch (Exception e) {
-			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "临时表  >> 中间表", 4);
+			//加载异常
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "临时表  >> 中间表\n\t" + 
+								e.getMessage(), 4);
 			throw e;
 		}
 
@@ -266,13 +276,15 @@ public class InfoTable {
 					System.out.println("Exception:" + e.toString());
 					System.out.println("merge_exception:" + import_sql);
 		//			hive_conn.execute3(import_sql);
-					FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表   >> 目标表对应分区", 4);
+					//加载异常
+					FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表   >> 目标表对应分区\n\t" +
+											e.getMessage(), 4);
 					throw e;
 				}
 			}
-		// 2016-12-19	
-		FileLoadingProgress.updateJobProgress(source_bean_list, 100);
-		FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "U", "中间表  >> 目标表对应分区 ", 2);	
+			// 2016-12-19	
+			FileLoadingProgress.updateJobProgress(source_bean_list, 100);
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "U", "中间表  >> 目标表对应分区 ", 2);	
 		} else {
 			import_sql = import_script.replace("partition_value", "");
 			try {
@@ -283,7 +295,7 @@ public class InfoTable {
 				System.out.println("Exception:" + e.toString());
 				System.out.println("merge_exception:" + import_sql);
 				//hive_conn.execute3(import_sql);
-				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表  >> 目标表(merge)\n" + import_script, 4);
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表  >> 目标表(merge)\n\t" + import_script, 4);
 				throw e;
 			}
 		}

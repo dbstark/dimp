@@ -82,7 +82,7 @@ public class FileLoadingProgress {
 	 * @param fileName 需要跟踪的文件名
 	 * @param progress 文件加载进度
 	 */
-	public static void updateProgress(String fileName, double progress) {
+	public static void updateFileProgress(String fileName, double progress) {
 
 		String sql = "update tb_file_loading_progress set progress_percent = " + progress + " where file_name = '"
 				+ fileName + "'";
