@@ -1,0 +1,15 @@
+/com/
+/udf/
+/core-site.xml
+/hbase-site.xml
+/hbase-site.xml.bak.bak2
+/hbase_config.properties.bak
+/hdfs-site.xml
+/history_oracle_config.properties
+/hive_config.properties
+/hive_config.properties.bak
+/hive_config2.properties
+/mysql_config.properties
+/mysql_config.properties.bak
+/oracle_config.properties
+/oracle_config.properties.bak

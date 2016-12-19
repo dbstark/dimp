@@ -1,0 +1,7 @@
+
+hbase.zookeeper.property.clientPort=2181
+hbase.zookeeper.quorum=192.168.4.177
+zookeeper.znode.parent=/hyperbase1
+hbase.master=
+hbase.rootdir=
+hbase.rpc.timeout=

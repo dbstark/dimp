@@ -1,0 +1,16 @@
+
+#Hive
+driverClassName=org.apache.hadoop.hive.jdbc.HiveDriver
+url=jdbc:transwarp://192.168.4.178:10000/default
+username=
+password=
+
+initialSize=2
+maxIdle=10
+minIdle=2
+maxActive=15
+logAbandoned=false
+removeAbandoned=true
+removeAbandonedTimeout=180
+maxWait=1000
+validationQuery=select 1

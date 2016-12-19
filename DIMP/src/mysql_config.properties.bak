@@ -1,0 +1,33 @@
+
+driverClassName=com.mysql.jdbc.Driver
+#url=jdbc:mysql://192.168.4.178:3306/jspsbc?characterEncoding=utf-8
+url=jdbc:mysql://localhost:3306/jspsbc?characterEncoding=utf-8
+username=root
+password=123456
+
+#maxActive: \u6700\u5927\u8fde\u63a5\u6570\u91cf 
+maxActive=150
+#<!--minIdle: \u6700\u5c0f\u7a7a\u95f2\u8fde\u63a5-->    
+minIdle=5
+#<!--maxIdle: \u6700\u5927\u7a7a\u95f2\u8fde\u63a5-->    
+maxIdle=20
+#<!--initialSize: \u521d\u59cb\u5316\u8fde\u63a5-->    
+initialSize=30
+#<!-- \u8fde\u63a5\u88ab\u6cc4\u9732\u65f6\u662f\u5426\u6253\u5370 -->  
+logAbandoned=true
+#<!--removeAbandoned: \u662f\u5426\u81ea\u52a8\u56de\u6536\u8d85\u65f6\u8fde\u63a5-->    
+removeAbandoned=true
+#<!--removeAbandonedTimeout: \u8d85\u65f6\u65f6\u95f4(\u4ee5\u79d2\u6570\u4e3a\u5355\u4f4d)-->    
+removeAbandonedTimeout=30
+#<!--maxWait: \u8d85\u65f6\u7b49\u5f85\u65f6\u95f4\u4ee5\u6beb\u79d2\u4e3a\u5355\u4f4d 1000\u7b49\u4e8e60\u79d2-->  
+maxWait=1000
+#<!-- \u5728\u7a7a\u95f2\u8fde\u63a5\u56de\u6536\u5668\u7ebf\u7a0b\u8fd0\u884c\u671f\u95f4\u4f11\u7720\u7684\u65f6\u95f4\u503c,\u4ee5\u6beb\u79d2\u4e3a\u5355\u4f4d. -->  
+timeBetweenEvictionRunsMillis=1000
+#<!--  \u5728\u6bcf\u6b21\u7a7a\u95f2\u8fde\u63a5\u56de\u6536\u5668\u7ebf\u7a0b(\u5982\u679c\u6709)\u8fd0\u884c\u65f6\u68c0\u67e5\u7684\u8fde\u63a5\u6570\u91cf -->  
+numTestsPerEvictionRun=30
+#<!-- 1000 * 60 * 30  \u8fde\u63a5\u5728\u6c60\u4e2d\u4fdd\u6301\u7a7a\u95f2\u800c\u4e0d\u88ab\u7a7a\u95f2\u8fde\u63a5\u56de\u6536\u5668\u7ebf\u7a0b-->  
+minEvictableIdleTimeMillis=1000
+
+validationQuery=select 1
+
+

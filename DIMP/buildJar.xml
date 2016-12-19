@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ImdbPro">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+	<target name="create_run_jar">
+		<jar destfile="jshdata_increment.jar" filesetmanifest="mergewithoutmain">
+			<!--
+			<jar destfile="dimp_hive.jar" filesetmanifest="mergewithoutmain">
+			<fileset dir="./bin/com/hiwan/dimp/incremental/util"/>
+			-->
+			<fileset dir="./bin"/>
+			<zipfileset excludes="META-INF/*.SF" src="./lib2/commons-beanutils-1.8.3.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-beanutils-core-1.8.0.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-codec-1.4.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-collections-3.2.1.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-configuration-1.6.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-dbcp-1.2.1.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-lang-2.6.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-cli-1.2.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-logging-1.1.3.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/commons-pool.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/guava-11.0.2.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hadoop-auth-2.5.2-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hadoop-common-2.5.2-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hamcrest-core-1.3.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-bson-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-client-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-common-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-examples-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-hadoop-compat-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-hadoop2-compat-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-hyperbase-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-it-0.98.6-transwarp-tests.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-it-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-prefix-tree-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-protocol-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-server-0.98.6-transwarp-tests.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-server-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-shell-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-testing-util-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hbase-thrift-0.98.6-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-beeline-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-cli-0.12.0-transwarp.jar"/>
+
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-exec-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-common-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-contrib-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-hbase-handler-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-hwi-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-jdbc-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-metastore-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-serde-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-service-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hive-shims-0.12.0-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/htrace-core-2.04.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/httpcore-4.2.5.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/jsch-0.1.50.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/junit-4.11.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/libfb303-0.9.0.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/libthrift-0.9.0.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/log4j-1.2.17.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/mysql-jdbc-5.1.25.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/netty-3.6.2.Final.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/ojdbc14.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/ooxml-schemas-1.1.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/poi-3.9.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/poi-ooxml-3.9.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/protobuf-java-2.5.0.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/slf4j-api-1.7.5.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/slf4j-log4j12-1.7.5.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/xml-apis-1.0.b2.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/xmlbeans-2.6.0.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/zookeeper-3.4.5-transwarp.jar"/>
+			
+			<zipfileset excludes="META-INF/*.*" src="./lib2/hadoop-hdfs-2.5.2-transwarp.jar"/>
+			<zipfileset excludes="META-INF/*.*" src="./lib2/httpclient-4.2.5.jar"/>
+			
+		</jar>
+	</target>
+</project>
