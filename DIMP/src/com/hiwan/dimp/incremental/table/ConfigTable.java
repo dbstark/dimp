@@ -84,7 +84,14 @@ public class ConfigTable {
 			return "";
 		} else if (file_date.compareTo(old_time) > 0) {
 			System.out.println("清空表：" + "truncate table " + aug_info.getTable_name());
-			hive_conn.execute3("truncate table " + aug_info.getTable_name());
+			try {
+				hive_conn.execute3("truncate table " + aug_info.getTable_name());
+				FileLoadingProgress.updateJobProgress(source_bean_list, 30);
+			} catch (Exception e) {
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "F", "清空目标表：" +
+						aug_info.getTable_name() + "\n\t" + e.getMessage(), 4);
+				throw e;
+			}
 		}
 
 		String file_code_change_path;
@@ -104,25 +111,18 @@ public class ConfigTable {
 			 * @since 2016-12-16
 			 * 
 			 */
-			FileLoadingProgress.updateProgress(fileName, 20);
 			/******************** new add [END] **********************/
 
 			file_code_change_path = source_bean.getMid_source_path();
 			try {
 				hfs.put_file_to_hdfs2(file_code_change_path, hive_conn.table_hdfs_path(aug_info.getTable_name()));
 				/********************new add [BEGIN]********************
-				 * 
 				 * @author CHENGKAI.SHENG
 				 * @since 2016-12-16
-				 * 
 				 */
-				FileLoadingProgress.updateProgress(fileName, 100);
-				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 2, 
-						"[Message]: file load SUCESSFUL!");
+				FileLoadingProgress.updateFileProgress(fileName, 90);
 			} catch (Exception e) {
-				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4,
-						"[Message]: ERROR\n\t" + e.getMessage() + 
-						"\n[Stage]: putting LOCAL FILE to TARGET TABLE(HDFS)");
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "F", "本地文件  >>  目标表", 4);
 				throw e;
 			}
 			/******************** new add [END] **********************/
@@ -130,6 +130,8 @@ public class ConfigTable {
 			// hfs.put_file_to_hdfs(file_code_change_path,
 			// aug_info.getAddfile_hdfs_script() , aug_info);
 		}
+
+		FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "F", "END", 2);
 		return file_date;
 	}
 }
