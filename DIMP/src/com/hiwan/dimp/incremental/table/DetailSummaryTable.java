@@ -254,6 +254,7 @@ public class DetailSummaryTable {
 					FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4, "[Message]: ERROR\n\t"
 							+ e.getMessage() + "\n[Stage]: putting LOCAL FILE to TARGET TABLE (HDFS)!");
 				}
+				throw e;
 			}
 			/******************** new add [END] *********************/
 		}

@@ -456,7 +456,6 @@ public class FileListUtil {
 	}
 
 	public void file_mv3(List<SourceFileBean> source_bean_list, String target_path) {
-
 		try {
 			for (SourceFileBean source_bean : source_bean_list) {
 				file_channel_copy(source_bean.getSource_path(), target_path);

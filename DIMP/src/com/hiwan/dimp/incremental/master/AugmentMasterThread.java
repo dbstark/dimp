@@ -278,7 +278,7 @@ public class AugmentMasterThread {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss") ;
 			while(true){
 				// [[ a table ]]
-				attb = table_data_queue.poll() ;
+				attb = table_data_queue.poll();
 				System.out.println("剩余数据量：" + table_data_queue.size());
 				if(attb instanceof AugmentTableThreadBean){
 					// [[ a job ]]
@@ -351,6 +351,7 @@ public class AugmentMasterThread {
 								}
 
 								if(where && (!"".equals(file_date))){
+
 									incre_date = incre_date_map.get(cim_job_name) ;
 									if( incre_date instanceof IncrementDate ){
 										if(file_date.compareTo(incre_date.getFile_date()) > 0){

@@ -194,11 +194,10 @@ public class InfoTable {
 		String file_date = null;
 		String[] f_arr = null;
 		String fileName = null;
-		HashSet<String> sucessfulFiles = new HashSet<String>();
 
 		for (SourceFileBean source_bean : source_bean_list) {
-
 			fileName = source_bean.getSource_path();
+
 			FileLoadingProgress.updateProgress(fileName, 25);
 
 			f_arr = source_bean.getSource_path().split("_");
@@ -211,15 +210,13 @@ public class InfoTable {
 			String hdfs_path = hive_conn.table_hdfs_path(aug_info.getTemp_table_name());
 			// hfs.put_file_to_hdfs(file_code_change_path, load_shell,aug_info)
 			// ;
-
 			try {
 				hfs.put_file_to_hdfs2(file_code_change_path, hdfs_path);
 				FileLoadingProgress.updateProgress(fileName, 55);
 				sucessfulFiles.add(fileName);
 			} catch (Exception e) {
-				String exceptionMessage = FileLoadingProgress.formatMessage(fileName, "异常", e, "U", "本地文件 >> 临时表");
-				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4, exceptionMessage);
-				System.out.println(exceptionMessage);
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "本地文件  >> 临时表", 4);
+				throw e;
 			}
 		}
 
@@ -230,16 +227,11 @@ public class InfoTable {
 		 */
 		try {
 			hive_conn.execute3(aug_info.getTemp_to_mid());
-			for (String file : sucessfulFiles) {
-				FileLoadingProgress.updateProgress(file, 65);
-			}
+			FileLoadingProgress.updateJobProgress(source_bean_list, 65);
 		} catch (Exception e) {
-			for (String file : sucessfulFiles) {
-				String message = FileLoadingProgress.formatMessage(file, "异常", e, "U", "临时表 >> 中间表 （数据去重）");
-				FileLoadingProgress.updateFinalStatus(file, new Date().toString(), 4, message);
-			}
+			FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "临时表  >> 中间表", 4);
+			throw e;
 		}
-
 
 		String import_script = aug_info.getImport_script().replace("1 = 1  and", "");
 		String import_sql = "";
@@ -273,17 +265,26 @@ public class InfoTable {
 				} catch (Exception e) {
 					System.out.println("Exception:" + e.toString());
 					System.out.println("merge_exception:" + import_sql);
-					hive_conn.execute3(import_sql);
+		//			hive_conn.execute3(import_sql);
+					FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表   >> 目标表对应分区", 4);
+					throw e;
 				}
 			}
+		// 2016-12-19	
+		FileLoadingProgress.updateJobProgress(source_bean_list, 100);
+		FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "U", "中间表  >> 目标表对应分区 ", 2);	
 		} else {
 			import_sql = import_script.replace("partition_value", "");
 			try {
 				hive_conn.execute3(import_sql);
+				FileLoadingProgress.updateJobProgress(source_bean_list, 100);
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "U", "中间表  >> 目标表", 2);
 			} catch (Exception e) {
 				System.out.println("Exception:" + e.toString());
 				System.out.println("merge_exception:" + import_sql);
-				hive_conn.execute3(import_sql);
+				//hive_conn.execute3(import_sql);
+				FileLoadingProgress.updateJobFinalStatus(source_bean_list, "异常", e, "U", "中间表  >> 目标表(merge)\n" + import_script, 4);
+				throw e;
 			}
 		}
 		return file_date;

@@ -85,16 +85,6 @@ public class ConfigTable {
 		} else if (file_date.compareTo(old_time) > 0) {
 			System.out.println("清空表：" + "truncate table " + aug_info.getTable_name());
 			hive_conn.execute3("truncate table " + aug_info.getTable_name());
-
-			/********************
-			 * new add [BEGIN]********************
-			 * 
-			 * @author CHENGKAI.SHENG
-			 * @since 2016-12-16
-			 * 
-			 */
-
-			/******************** new add [END] **********************/
 		}
 
 		String file_code_change_path;
@@ -133,6 +123,7 @@ public class ConfigTable {
 				FileLoadingProgress.updateFinalStatus(fileName, new Date().toString(), 4,
 						"[Message]: ERROR\n\t" + e.getMessage() + 
 						"\n[Stage]: putting LOCAL FILE to TARGET TABLE(HDFS)");
+				throw e;
 			}
 			/******************** new add [END] **********************/
 

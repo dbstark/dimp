@@ -8,10 +8,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+
+import javax.xml.transform.Source;
 
 import org.iq80.snappy.HadoopSnappyCodec;
 
 import com.hiwan.dimp.db.DBAccess;
+import com.hiwan.dimp.incremental.bean.SourceFileBean;
+import com.sun.org.apache.bcel.internal.classfile.SourceFile;
 
 /**
  * 单文件加载进度跟踪服务中，向表tb_file_loading_progress【插入(insert)、更新(update)】记录
@@ -173,6 +178,23 @@ public class FileLoadingProgress {
 				  				  "【表  类  型】：" + tableType + "\n" + 
 				  				  "【错误阶段】：" + stage;
 		return exceptionMessage;		
+	}
+	
+	
+	public static void updateJobFinalStatus(List<SourceFileBean> fileList, String messageType, Exception e, 
+							String tableType, String stage, int status) {
+		for (SourceFileBean file : fileList) {
+			String fileName = file.getSource_path();
+			String loadInfo = formatMessage(fileName, messageType, e, tableType, stage);
+			updateFinalStatus(fileName, new Date().toString(), status, loadInfo);
+		}
+	}
+	
+	public static void updateJobProgress(List<SourceFileBean> fileList, double progress) {
+		for (SourceFileBean file : fileList) {
+			String fileName = file.getSource_path();
+			updateProgress(fileName, progress);
+		}
 	}
 	/**
 	 * 测试【插入、更新】功能
