@@ -131,6 +131,7 @@ public class ConfigTable {
 			// aug_info.getAddfile_hdfs_script() , aug_info);
 		}
 
+		FileLoadingProgress.updateJobProgress(source_bean_list, 100);
 		FileLoadingProgress.updateJobFinalStatus(source_bean_list, "成功", null, "F", "END", 2);
 		return file_date;
 	}
