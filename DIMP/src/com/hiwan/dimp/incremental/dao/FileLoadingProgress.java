@@ -158,7 +158,7 @@ public class FileLoadingProgress {
 	 * @param isSucessful
 	 * @param loadInfo
 	 */
-	public static void updateFinalStatus(String fileName, String endTime, int isSucessful, String loadInfo) {
+	public static void updateFileFinalStatus(String fileName, String endTime, int isSucessful, String loadInfo) {
 		String sql = "update tb_file_loading_progress set end_time = '" + endTime + 
 				"', is_sucessful = " + isSucessful + 
 				", load_info = '" + loadInfo + "' where file_name = '" +
@@ -186,14 +186,14 @@ public class FileLoadingProgress {
 		for (SourceFileBean file : fileList) {
 			String fileName = file.getSource_path();
 			String loadInfo = formatMessage(fileName, messageType, e, tableType, stage);
-			updateFinalStatus(fileName, new Date().toString(), status, loadInfo);
+			updateFileFinalStatus(fileName, new Date().toString(), status, loadInfo);
 		}
 	}
 	
 	public static void updateJobProgress(List<SourceFileBean> fileList, double progress) {
 		for (SourceFileBean file : fileList) {
 			String fileName = file.getSource_path();
-			updateProgress(fileName, progress);
+			updateFileProgress(fileName, progress);
 		}
 	}
 	/**

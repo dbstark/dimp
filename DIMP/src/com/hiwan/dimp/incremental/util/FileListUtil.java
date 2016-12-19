@@ -169,7 +169,7 @@ public class FileListUtil {
 					 * @since 2016-12-15
 					 */
 					if ("right".equals(right_wrong)) {
-						FileLoadingProgress.updateProgress(fileName, 10);
+						FileLoadingProgress.updateFileProgress(fileName, 10);
 					}
 
 					/****************new add [END]*****************/
@@ -188,7 +188,7 @@ public class FileListUtil {
 							 * @author CHEGNKAI.SHENG
 							 * @since 2016-12-16
 							 */
-							FileLoadingProgress.updateFinalStatus(fileName, 
+							FileLoadingProgress.updateFileFinalStatus(fileName, 
 									new Date().toString(), 4, "[Message]: ERROR\n\t" + error_message +
 									"[Stage]: TRANSCODING");
 
@@ -207,7 +207,7 @@ public class FileListUtil {
 							 * @author CHEGNKAI.SHENG
 							 * @since 2016-12-16
 							 */
-							FileLoadingProgress.updateFinalStatus(fileName, 
+							FileLoadingProgress.updateFileFinalStatus(fileName, 
 									new Date().toString(), 4, error_message);
 
 							/*******************new add [END]******************/
